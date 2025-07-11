@@ -1,0 +1,57 @@
+﻿@model List<ManageEmployeeWeb.Models.EmployeeListViewModel>
+
+<form method="get" asp-action="Index" class="mb-3 d-flex">
+    <input type="text" name="search" value="@ViewBag.Search" class="form-control me-2" placeholder="Search by Name or Title" />
+    <button type="submit" class="btn btn-primary">Search</button>    
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No employees found.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int serial = ((ViewBag.CurrentPage - 1) * ViewBag.PageSize) + 1;
+            }
+
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@serial</td>
+                    <td>@emp.Name</td>
+                    <td>@emp.Title</td>
+                    <td>@emp.Salary</td>
+                </tr>
+                serial++;
+            }
+        </tbody>
+    </table>
+
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = i, search = ViewBag.Search })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+
+
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mb-3">← Back to Home</a>
+
+}

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Title List";
+}
+
+<div class="container mt-4">
+    <h3>Title List</h3>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th>
+                <th>Min Salary</th>
+                <th>Max Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var title in Model)
+            {
+                <tr>
+                    <td>@title.Title</td>
+                    <td>@title.MinSalary</td>
+                    <td>@title.MaxSalary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mb-3">← Back to Home</a>
+
+</div>
