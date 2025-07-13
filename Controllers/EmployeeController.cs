@@ -50,6 +50,7 @@ namespace ManageEmployeeWeb.Controllers
                 .Take(pageSize)
                 .Select(e => new EmployeeListViewModel
                 {
+                    Id = e.Id,
                     Name = e.Name,
                     Title = e.Salaries
                         .OrderByDescending(s => s.FromDate)
@@ -69,8 +70,6 @@ namespace ManageEmployeeWeb.Controllers
 
             return View(result);
         }
-
-
 
         public IActionResult Titles()
         {
@@ -153,5 +152,32 @@ namespace ManageEmployeeWeb.Controllers
                 return View(model);
             }
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var employee = _context.Employees
+                    .Include(e => e.Salaries)
+                    .FirstOrDefault(e => e.Id == id);
+
+                if (employee == null)
+                    return NotFound();
+
+                _context.EmployeeSalaries.RemoveRange(employee.Salaries);
+                _context.Employees.Remove(employee);
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                TempData["SuccessMessage"] = "Error deleting employee.";                
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
